@@ -1,4 +1,5 @@
 import { city, demolishHousesOnTheStreet, getBuildingsWithStaffCountGreaterThen } from "./04_01";
+import { createMessages, getStreetsTitlesOfGovermentsBuildings, getStreetsTitlesOfHouses } from "./05_02";
 
 beforeEach(()=> {
     city = {
@@ -89,19 +90,32 @@ beforeEach(()=> {
     houses: Array<HouseType>;
     governmentBuildings: Array<GovernmentBuildingType>;
   };
-  
+
+  test("list of streets titles of goverments buildings",() => {
+    let streetsNames = getStreetsTitlesOfGovermentsBuildings(city.governmentBuildings);
 
 
-  test.skip("Houses should be destroyed", () => {
-    demolishHousesOnTheStreet(city:CityType, "Happy street");
-    expect(city.houses.length).toBe(1);
-    expect(city.houses[0].id).toBe(1);
+    expect(streetsNames.length).toBe(2);
+    expect(streetsNames[0]).toBe("Central Str");
+    expect(streetsNames[1]).toBe("South Str");
+
   })
 
+test("list of streets titles", () => {
+    let streets = getStreetsTitlesOfHouses(city.houses);
 
-  test.skip ("buildings with correct staff count", () => {
-    let buildings = getBuildingsWithStaffCountGreaterThen(city.governmentBuildings, 500)
+    expect(streets.length).toBe(3);
+    expect(streets[0]).toBe('White street');
+    expect(streets[1]).toBe('Happy street');
+    expect(streets[2]).toBe('White street');
 
-    expect(buildings.length).toBe(1);
-    expect(buildings[0].type).toBe("FIRE-STATION");
-  })
+})
+
+test ("create greeting messages for streets", () => {
+    
+    let messages = createMessages(city.houses)
+    expect(messages.length).toBe(3);
+    expect(messages[0]).toBe("Hello guys from White street")
+    expect(messages[1]).toBe("Hello guys from Happy street")
+    expect(messages[2]).toBe("Hello guys from White street")
+})
