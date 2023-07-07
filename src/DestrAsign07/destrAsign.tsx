@@ -29,6 +29,9 @@ type  PropsType = {
 
 export const  ManComponent: React.FC<PropsType> = ({props}) => {
 
+const [message, setMessage]=useState<string>("hello")
+
+
    const {title, man, ...restProps} = props
 
     return <div>
