@@ -28,3 +28,33 @@ test ('object reference type test', ()=> {
     expect(user.age).toBe(1000)
 
 })
+
+
+
+
+
+test ('array test', ()=> {
+    
+    let users: UserType[]= [
+        {
+            name: 'Dimych',
+            age: 32
+        },
+        {
+            name: 'Dimych',
+            age: 32
+        }
+    ]
+
+let admins = users
+admins.push({name:'Bandyugan', age: 10})
+
+
+    expect(users[2]).toEqual({name:'Bandyugan', age: 10})
+
+})
+
+
+
+
+
