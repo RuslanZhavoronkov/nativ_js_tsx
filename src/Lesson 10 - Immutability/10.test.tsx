@@ -1,4 +1,4 @@
-import { UserType, UserWithBooksType, UserWithLaptopType, WithCompaniesType, addBooksToUser, addCompany, makeHairstyle, moveUser, moveUserToOtherHouse, removeBook, updateBook, upgradeUserLaptop } from "./10"
+import { UserType, UserWithBooksType, UserWithLaptopType, WithCompaniesType, addBooksToUser, addCompany, makeHairstyle, moveUser, moveUserToOtherHouse, removeBook, updateBook, updateCompany, updateCompanyTitle, upgradeUserLaptop } from "./10"
 
 
 
@@ -279,5 +279,38 @@ test('update company', () => {
 
     expect(user).not.toBe(userCopy)
     expect(userCopy.companies[0].title).toBe('OZON')
+    expect(userCopy.companies).not.toBe(user.companies)
+
+})
+
+
+//-------------------------------------------------------------------------------------------------------------------------
+
+test('update company', () => {
+
+    let user: UserWithLaptopType= {
+        name: 'Dimych',
+        hair: 32,
+        address: {
+            city: 'Minsk',
+            house: 12
+        },
+        laptop: {
+            title: 'ZenBook'
+        }
+
+    }
+
+    let companies = {
+        'Dimych':[{id:1, title:'Epam'}, {id:2, title:'IT-INCUBATOR'}],
+        'Artem': [{id:1, title:'IT-INCUBATOR'}]
+    }
+
+
+    const copy = updateCompanyTitle (companies, 'Dimych', 1, 'Yandex');
+
+    expect(copy['Dimych'][0].title).toBe('Yandex')
+    expect(copy['Dimych']).not.toBe(companies['Dimych'])
+    expect(copy['Artem']).toBe(companies['Artem'])
 
 })
