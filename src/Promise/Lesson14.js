@@ -21,9 +21,9 @@ promise1.then((data) => {
 //В реальной жизни запрос на сервер пишется так:
 
 axios.get('https://google.com')
-.then((data) => {
-    console.log(data);
-})
+    .then((data) => {
+        console.log(data);
+    })
 
 
 //асинхронный запрос в базу данных
@@ -37,7 +37,7 @@ promise2.then((user) => {
 //В реальной жизни запрос на сервер пишется так:
 
 findUserInDB(1)
-.then((user)=> {console.log(user)})
+    .then((user) => { console.log(user) })
 
 
 console.log(finish)
@@ -53,15 +53,145 @@ promise3.catch((error) => {
 
 const promise4 = findUserInDB(100);
 promise4
-.then((user) => { //if resolve
-    console.log (user)
-})
-.catch((error)=> { //if reject
-    console.log (error)
-})
-.finally(()=> {
-    console.log ('finish')
-})
+    .then((user) => { //if resolve
+        console.log(user)
+    })
+    .catch((error) => { //if reject
+        console.log(error)
+    })
+    .finally(() => {
+        console.log('finish')
+    })
 
 //------------------------------------------------------------------------
 
+//Статический метод класса Promise.all([pr1, pr2])
+
+const otherPromise = Promise.all([promise1, promise2]) //otherPromise заресолвится тогда, когда promise1 и promise2 заресолвятся
+
+otherPromise.then((results) => {
+
+    const dataFromGoogle = results[0]
+    const dataUserDB = results[1]
+    console.log(`${dataFromGoogle} - ${dataUserDB}`);
+})
+    .catch(() => { console.log('Initialization failed. Try later') })
+
+//Статический метод класса Promise.allSettled([pr1, pr2]), зарезолвится в любом случае(добавляется проверка на наличие элемента массива. Метода catch нет)
+
+const otherPromise2 = Promise.allSettled([promise1, promise2])
+
+otherPromise2.then((results) => {
+    const dataFromGoogle = results[0].status === 'fulfilled' ? results[0].value : { data: { vacancies: null } }
+    const dataUserDB = results[1].status === 'fulfilled' ? results[1].value : { name: results[1].reason }
+
+    console.log(`${dataFromGoogle.data.vacancies} ${dataUserDB.name}`)
+})
+
+//Статический метод Promise.resolve() - возвращает promise, зарезолвленный resolve определенным значение
+
+const resolvedPromise = Promise.resolve(100)
+//console.log(resolvedPromise)
+resolvedPromise.then((data) => console.log(data))
+    .catch((error) => console.log(error))
+
+//Статический метод Promise.rejected() - возвращает promise, зарежектонный reject определненной ошибкой
+
+const rejectedPromise = Promise.reject({ message: 'Some error' })
+//console.log(rejectedPromise)
+
+rejectedPromise
+    .then((data) => console.log(data))
+    .catch((error) => console.warn(error))
+
+//Пример с объектом который делает запрос на сервер
+
+const userAPI = {
+    getAllUsers() {
+        return Promise.resolve([{ name: 'D' }, { name: 'N' }])
+    },
+    login(loGin, password) {
+        if (loGin !== '123' && password !== '123') {
+            return Promise.reject({ message: 'Incorrect Login and password' })
+        } else {
+            return Promise.resolve({ name: 'Dima', id: 12, avatarURL: '' })
+        }
+    }
+}
+
+
+const pr = userAPI.getAllUsers()
+
+//pr.then((users) => console.log(users))
+
+
+
+usersAPI.loGin('123', '441142')
+    .then((data) => { console.log(data) })
+    .catch((error) => console.log(error))
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------
+
+//Цепочка then
+
+findUserInDB(1)    //найди юзера с id=1
+    .then(user => user.name) // затем возьми у юзера с id=1 имя 
+    .then(name => console.log(name)) // затем выведи это имя в консоль
+
+//___________________________________________________________________________________________________________________________________________
+
+axios.get('https://google.com') //запрос на сервер - возвращает промис
+    .then(res => res.data) // затем забираем у этого промиса data
+    .then((data) => console.log(data)) //затем выводим дату в консоль
+
+
+//Создадим функцию которая делает запрос на сервер и возвращает объект промис с данными о вакансии
+
+const getVacanciesCountFromGoogle = () => {
+    return axios.get('https://google.com')
+        .then(res => res.data)
+        .then(data => data.vacancies)
+}
+
+getVacanciesCountFromGoogle().then(vacancies => console.log(vacancies))
+
+findUserInDB(1)
+    .then(user => user.name)
+    .then(name => {
+        console.log(name);
+        return 100
+    })
+    .then(number => {
+        console.log(number)
+        return number + 1
+    })
+    .then(number => {
+        console.log(number)
+        return number + 1
+    })
+    .then(number => {
+        console.log(number)
+        return number + 1
+    })
+
+//Пример с возвращаемым промисом
+
+findUserInDB(1)
+    .then(user => user.name)
+    .then(name => {
+        console.log(name)
+        return 100;
+    })
+    .then(number => {
+        console.log(number)
+        return {value: number + 1}
+    })
+    .then (obj => {
+        console.log(obj.value)
+        const promise = Promise.resolve(obj.value + 1) //создается новый промис с зарезолвенным значением
+        return promise //возвращает зарезолвенное значение
+    })
+    .then(number => {
+        console.log(number)
+        return number + 1
+    })
