@@ -195,3 +195,23 @@ findUserInDB(1)
         console.log(number)
         return number + 1
     })
+   // > 'Dimych', 100, 101, 102
+
+   //Запрос на сервер найти юзера
+
+   const lastPromise = findUserInDB(1)
+   .then(user => {
+    console.log(user)
+    return user
+   })
+   .then ((user)=> {
+    return findUserInDB(user.friend)
+   })
+   .then((friend1)=> {
+    console.log(friend1)
+    return findUserInDB(friend1.friend)
+   })
+   .then ((friend2)=> {
+    return findUserInDB(friend2.friend) //вернется значение зарезолвенное промисом
+   })
+
