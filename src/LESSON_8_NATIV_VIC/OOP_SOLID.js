@@ -115,3 +115,69 @@ class User1 {
 }
 
 //наследование
+
+class User1 {
+    //  #name = ''
+    constructor(name, site, dob) {
+        this._name = name
+        this.site = site
+        this.dob = dob
+    }
+
+    get name() {     //getter - get name
+        return this._name
+    }
+
+    set name(value) { //setter - function change name
+        this._name = value
+    }
+
+    hello() {
+        console.log(`I am ${this.name} from ${this.site}`)
+    }
+}
+
+// const u7 = new User1('Dimych', 'it-incubator.by', new Date(1988, 1, 2))
+// const u8 = new User1('Artem', 'it-incubator.by', new Date(1989, 10, 12))
+
+// let users = [u7, u8]
+// users.forEach(u => u.hello())
+
+class Coder extends User1 {
+    constructor(name, site, dob, tech) {
+        super(name, site, dob) //create constructor User
+        this.tech = tech
+    }
+    code() {
+        console.log(`I am ${this.name}, here is my ${this.tech} code: const sum = (a,b) => a + b`)
+    }
+
+    //переопределение метода hello() функции конструктора User
+    hello() {
+        super.hello()
+        console.log(`Go away`)
+    }
+}
+
+const coder1 = new Coder('Dimych', 'it-incubator.by', new Date(1988, 1, 2), 'c#')
+coder1.hello()
+coder1.code()
+
+class Hacker extends Coder {
+    constructor(a, b, c, d) {
+        super()//не будем нечего передавать конструктору Coder
+
+        this.tech = 'XXX'
+        this._name = 'XXXX'
+    }
+
+    code(){
+        console.log(`Ill hack everything`)
+    }
+    
+}
+
+const haker = new Hacker('Dimych', 'it-incubator.by', new Date(1988, 1, 2), 'c#')
+
+haker.hello()
+haker.code()
